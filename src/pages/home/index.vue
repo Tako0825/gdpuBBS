@@ -2,7 +2,7 @@
 	<view class="container">
 		<!-- 分类列表 -->
 		<view class="nav">
-			<text class="nav-item" 
+			<text class="nav-item"
 				v-for="(item) in categoryList" 
 				:key="item.id"
 				@click="findCategory(item.id)"
@@ -19,7 +19,8 @@
 			<view 
 				class="card"
 				v-for="(item) in articleList"
-				:key="item.id"
+				:key="item.articleId"
+				@click="findArticle(item.articleId)"
 			>
 				<view class="user">
 					<view class="avatar">
@@ -30,7 +31,6 @@
 				<text class="articleBrief">{{ item.articleBrief }}</text>
 				<text class="creatTime">{{ formatCreateTime(item.creatTime) }}</text>
 				<view class="controls">
-					<div class="category">分类?</div>
 					<text class="starCount">{{ item.starCount }}</text>
 					<text class="likeCount">{{ item.likeCount }}</text>
 				</view>
@@ -77,7 +77,7 @@
 
 			// 获取文章列表
 			async getArticleList() {
-				await this.sleep(500)
+				await this.sleep()
 				const res = await http("/articles/wx/articleInfo", {
 					method: "GET",
 					data: {
@@ -86,6 +86,7 @@
 						pageSize: this.pageSize
 					}
 				})
+				await this.wakeup()
 				this.articleList = res.data
 			},
 
@@ -103,6 +104,13 @@
 				})
 				await this.wakeup()
 				this.articleList = res.data
+			},
+
+			// 查询指定文章
+			findArticle(id) {
+				uni.navigateTo({
+					 url: `./article?id=${id}`,
+				});
 			},
 
 			// 睡觉函数

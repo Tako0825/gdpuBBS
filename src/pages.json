@@ -7,6 +7,12 @@
 			}
 		},
 		{
+			"path": "pages/home/article",
+			"style": {
+				"navigationBarTitleText": "文章详情"
+			}
+		},
+		{
 			"path": "pages/search/index",
 			"style": {
 				"navigationBarTitleText": "搜索"
