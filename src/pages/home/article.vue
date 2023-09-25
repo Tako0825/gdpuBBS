@@ -34,7 +34,8 @@
 </template>
 
 <script>
-import http from "../../http/index"
+import http from "@/utils/http"
+
 export default {
     data() {
         return {
