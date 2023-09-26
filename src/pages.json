@@ -13,6 +13,12 @@
 			}
 		},
 		{
+			"path": "pages/home/auth",
+			"style": {
+				"navigationBarTitleText": "没有权限"
+			}
+		},
+		{
 			"path": "pages/search/index",
 			"style": {
 				"navigationBarTitleText": "搜索"

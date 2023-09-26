@@ -6,26 +6,28 @@
         <view class="cu-item shadow">
             <view class="cu-list menu-avatar">
                 <view class="cu-item">
-                    <view class="cu-avatar round lg" :style="{ 'background-image' : `url(${avatar})` }"></view>
+                    <view class="avatar cu-avatar round lg">
+                        <img :src="avatar" alt="作者头像">
+                    </view>
                     <view class="content flex-sub">
                         <view>{{ authorName }}</view>
                         <view class="text-gray text-sm flex justify-between">
-                            {{ createtime }}
+                            {{ article.createtime }}
                         </view>
                     </view>
                 </view>
             </view>
             <view class="text-content">
-                {{ content }}
+                {{ article.content }}
             </view>
             <view class="controls text-gray text-sm text-right padding">
                 <view class="likeCount">
                     <like :status="like"/>
-                    <text>{{ likeNumber }}</text>
+                    <text>{{ article.likeNumber }}</text>
                 </view>
                 <view class="starCount">
-                    <star :status="star"/>
-                    <text>{{ stars?stars:0 }}</text>
+                    <star :status="article.star"/>
+                    <text>{{ article.stars?article.stars:0 }}</text>
                 </view>
             </view>
         </view>
@@ -38,10 +40,11 @@
         class="cu-list menu-avatar comment solids-top"
     >
         <view class="cu-item">
-            <view class="cu-avatar round" :style="{ 'background-image' : `url(${avatar})` }">
-                <view>{{ item.author }}</view>
+            <view class="avatar cu-avatar round">
+                <img :src="item.authorPicture" alt="用户头像">
             </view>
             <view class="content">
+                <view class="text-grey">{{ item.author }}</view>
                 <view class="padding-sm radius margin-top-sm text-sm light bg-blue">
                     <view class="flex">
                         <view class="flex-sub text-grey">{{ item.content }}</view>
@@ -59,6 +62,7 @@
 
 <script>
 import http from "@/utils/http"
+import auth from "@/utils/auth"
 import like from "@/components/like"
 import star from "@/components/like"
 
@@ -68,27 +72,28 @@ export default {
     },
     data() {
         return {
-            userId: 1,
             // 文章详情
-            content: undefined,
-            createtime: undefined,
-            like: undefined,
-            likeNumber: undefined,
-            star: undefined,
-            stars: undefined,
+            article: null,
             // 作者详情
-            authorId: undefined,
-            articleCategory: undefined,
             avatar: undefined,
             authorName: undefined,
             category: undefined,
-            // 评论
+            // 评论列表
             commentList: new Array()
         }
     },
-
+    computed: {
+        userId() {
+            return this.$store.state.user?.id || null;
+        }
+    },
     async onLoad(params) {
         const { id: articleId } = params
+        if(!auth()) {
+            return uni.navigateTo({
+                url: "./auth"
+            })
+        }
         await this.getArticle(articleId)
         await this.getAuthor()
         await this.getComment(articleId)
@@ -101,19 +106,21 @@ export default {
                 method: "GET"
             })
             const { content, createtime, like, likeNumber, star, stars, authorId, articleCategory } = res.data.data
-            this.content = content
-            this.createtime = createtime
-            this.like = like
-            this.likeNumber = likeNumber
-            this.star = star
-            this.stars = stars
-            this.authorId = authorId
-            this.articleCategory = articleCategory
+            this.article = {
+                content,
+                createtime,
+                like,
+                likeNumber,
+                star,
+                stars,
+                authorId,
+                articleCategory,
+            }
         },
 
         // 获取作者详情 (头像、用户名)
         async getAuthor() {
-            const { data: user } = await http(`/users/${this.authorId}`, {
+            const { data: user } = await http(`/users/${this.article.authorId}`, {
                 method: "GET"
             })
             const { picture, nickName } = user
@@ -133,6 +140,14 @@ export default {
 </script>
 
 <style lang="less">
+    .avatar {
+        overflow: hidden;
+        img {
+            width: 100%!important;
+            height: 100%!important;
+        }
+    }
+
     .controls {
         display: flex;
         column-gap: 15rpx;
