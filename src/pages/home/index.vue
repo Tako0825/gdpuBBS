@@ -20,27 +20,33 @@
 		<!-- 文章列表 -->
 		<view class="article">
 			<view 
-				class="card"
 				v-for="(item) in articleList"
 				:key="item.articleId"
 				@click="pageToArticle(item.articleId)"
+				class="card cu-list menu-avatar comment solids-top"
 			>
-				<view class="user">
-					<view class="avatar">
-						<img :src="item.imgURL" alt="用户头像">
-					</view>
-					<view class="authorName">{{ item.authorName }}</view>
-				</view>
-				<text class="articleBrief">{{ item.articleBrief }}</text>
-				<text class="creatTime">{{ formatDate(item.creatTime) }}</text>
-				<view class="controls">
-					<view class="likeCount">
-						<like :status="item.isLike"/>
-						<text>{{ item.likeCount }}</text>
-					</view>
-					<view class="starCount">
-						<star :status="item.isStar"/>
-						<text>{{ item.starCount }}</text>
+				<view class="cu-item">
+					<view class="cu-avatar round" :style="{ 'background-image': `url(${item.imgURL})` }"></view>
+					<view class="content">
+						<view class="text-grey">{{ item.authorName }}</view>
+						<view class="bg-grey padding-sm radius margin-top-sm  text-sm">
+							<view class="flex">
+								<view class="flex-sub">{{ item.articleBrief }}</view>
+							</view>
+						</view>
+						<view class="margin-top-sm flex justify-between">
+							<view class="text-gray text-df">{{ formatDate(item.creatTime) }}</view>
+						</view>
+						<view class="controls">
+							<view class="likeCount">
+								<like :status="item.isLike"/>
+								<text>{{ item.likeCount }}</text>
+							</view>
+							<view class="starCount">
+								<star :status="item.isStar"/>
+								<text>{{ item.starCount }}</text>
+							</view>
+						</view>
 					</view>
 				</view>
 			</view>
@@ -266,59 +272,18 @@
 
 		// 文章列表
 		.article {
+			overflow: hidden;
 			flex: 1;
 			.card {
 				position: relative;
 				padding: 20rpx;
 				margin-bottom: 20rpx;
-				background-color: #fff;
-				border-bottom: 2px solid #3498db;
-				border-radius: 0 0 20rpx 20rpx;
-
-				.user {
-					display: flex;
-					align-items: center;
-					column-gap: 30rpx;
-					// 用户头像
-					.avatar {
-						display: flex;
-						justify-content: center;
-						align-items: center;
-						width: 100rpx;
-						height: 100rpx;
-						border-radius: 50%;
-						overflow: hidden;
-						background-color: #bdc3c7;
-						img {
-							width: 100%;
-							height: 100%;
-						}
-					}
-				}
-
-				// 文章内容
-				.articleBrief {
-					display: -webkit-box;
-					-webkit-line-clamp: 3;
-					-webkit-box-orient: vertical;
-					overflow: hidden;
-					text-overflow: ellipsis;
-					margin: 30rpx 0;
-				}
-				
-				// 文章创建时间
-				.createTime {
-					display: inline-block;
-					height: 50rpx;
-				}
-
 				.controls {
 					display: flex;
-					column-gap: 20rpx;
+					column-gap: 15rpx;
 					position: absolute;
-					right: 20rpx;
-					bottom: 20rpx;
-
+					right: 0rpx;
+					bottom: 0rpx;
 					// 文章点赞数
 					// 文章收藏数
 					.likeCount,
@@ -326,7 +291,7 @@
 						display: flex;
 						justify-content: space-between;
 						align-items: center;
-						column-gap: 10rpx;
+						column-gap: 5rpx;
 						height: 50rpx;
 						img {
 							width: 50rpx;
