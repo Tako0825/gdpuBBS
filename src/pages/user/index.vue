@@ -1,10 +1,18 @@
 <template>
-  <view>我的</view>
+  <view>
+    <button type="button" @click="pageToLogin">登录</button>
+  </view>
 </template>
 
 <script>
 export default {
-
+  methods: {
+    pageToLogin() {
+      uni.navigateTo({
+        url: "./login"
+      })
+    }
+  }
 }
 </script>
 

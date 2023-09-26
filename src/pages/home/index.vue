@@ -61,7 +61,6 @@
 		},
 		data() {
 			return {
-				userId: 9,
 				sleepStatus: false,
 				pageNum: 1,
 				pageSize: 10,
@@ -69,9 +68,20 @@
 				articleList: new Array(),
 			}
 		},
+		computed: {
+			userId() {
+				return this.$store.state.user?.id || null;
+			}
+		},
+		watch: {
+			// 监控登录态的变化, 刷新点赞收藏状态
+			async userId() {
+				this.refreshLikeStar(this.articleList)
+			}
+		},
 		async onLoad() {
 			await this.getCategoryList()
-			await this.getArticleList()	
+			await this.getArticleList()
 		},
 		methods: {
 			formatDate,
@@ -88,7 +98,7 @@
 				this.categoryList = data
 			},
 
-			// 获取文章列表
+			// 查询文章列表
 			async getArticleList() {
 				await this.sleep()
 				const { data } = await http("/articles/wx/articleInfo", {
@@ -99,39 +109,9 @@
 						pageSize: this.pageSize
 					}
 				})
-				for (let item of data) {
-					item.isLike = await this.isLike(item.articleId)
-				}
-				for (let item of data) {
-					let res = await this.isStar(item.articleId)
-					item.isStar = res.star
-				}
+				await this.refreshLikeStar(data)
 				await this.wakeup()
 				this.articleList = data
-			},
-
-			// 判断当前用户是否对点赞相应文章
-			async isLike(articleId) {
-				const res = await http("/like/islike", {
-					method: "GET",
-					data: {
-						articleId,
-						userId: this.userId
-					}
-				})
-				return res.data
-			},
-
-			// 判断当前用户是否收藏相应文章
-			async isStar(articleId) {
-				const res = await http("/star/info", {
-					method: "GET",
-					data: {
-						articleId,
-						userId: this.userId
-					}
-				})
-				return res.data
 			},
 
 			// 分类查询文章
@@ -146,15 +126,37 @@
 						pageSize: this.pageSize
 					}
 				})
-				for (let item of data) {
-					item.isLike = await this.isLike(item.articleId)
-				}
-				for (let item of data) {
-					let res = await this.isStar(item.articleId)
-					item.isStar = res.star
-				}
+				await this.refreshLikeStar(data)
 				await this.wakeup()
 				this.articleList = data
+			},
+
+			// 判断当前用户是否对点赞相应文章
+			async isLike(articleId) {
+				if(!this.userId)
+					return false
+				const res = await http("/like/islike", {
+					method: "GET",
+					data: {
+						articleId,
+						userId: this.userId
+					}
+				})
+				return res.data
+			},
+
+			// 判断当前用户是否收藏相应文章
+			async isStar(articleId) {
+				if(!this.userId)
+					return false
+				const res = await http("/star/info", {
+					method: "GET",
+					data: {
+						articleId,
+						userId: this.userId
+					}
+				})
+				return res.data
 			},
 
 			// 跳转至指定文章
@@ -178,6 +180,17 @@
 			async wakeup() {
 				this.sleepStatus = false
 			},
+
+			// 刷新当前登录态对应的点赞收藏状态
+			async refreshLikeStar(articleList) {
+				for(let item of articleList) {
+					item.isLike = await this.isLike(item.articleId)
+				}
+				for(let item of articleList) {
+					let res = await this.isStar(item.articleId)
+					item.isStar = res.star
+				}
+			}
 		}
 	}
 </script>
