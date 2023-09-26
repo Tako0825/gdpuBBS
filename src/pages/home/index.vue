@@ -9,7 +9,7 @@
 					:key="item.id"
 					@click="findCategory(item.id)"
 				>
-					<text class="title">{{ item.category }} </text>
+					<text class="title text-black">{{ item.category }} </text>
 				</text>
 			</view>
 		</view>
@@ -23,18 +23,20 @@
 				v-for="(item) in articleList"
 				:key="item.articleId"
 				@click="pageToArticle(item.articleId)"
-				class="card cu-list menu-avatar comment solids-top"
+				class="card cu-list menu-avatar comment solids-top shadow"
 			>
-				<view class="cu-item">
-					<view class="cu-avatar round" :style="{ 'background-image': `url(${item.imgURL})` }"></view>
+				<view class="card-item cu-item flex">
+					<view class="user flex align-center">
+						<view class="cu-avatar round fl" :style="{ 'background-image': `url(${item.imgURL})` }"></view>
+						<view class="text-grey ">{{ item.authorName }}</view>
+					</view>
 					<view class="content">
-						<view class="text-grey">{{ item.authorName }}</view>
-						<view class="bg-grey padding-sm radius margin-top-sm  text-sm">
+						<view class="bg-grey padding-sm margin-top-sm margin-bottom-sm radius text-sm">
 							<view class="flex">
-								<view class="flex-sub">{{ item.articleBrief }}</view>
+								<view class="card-content">{{ item.articleBrief }}</view>
 							</view>
 						</view>
-						<view class="margin-top-sm flex justify-between">
+						<view class="flex justify-between">
 							<view class="text-gray text-df">{{ formatDate(item.creatTime) }}</view>
 						</view>
 						<view class="controls">
@@ -212,7 +214,7 @@
 		background-color: #ecf0f1;
 
 		.nav-container {
-			width: 150rpx;
+			width: 130rpx;
 			height: 100vh;
 		}
 
@@ -221,7 +223,7 @@
 			position: fixed;
 			top: 0;
 			left: 0;
-			width: 150rpx;
+			width: 130rpx;
 			height: 100vh;
 			overflow-y: auto;
 			background-color: #fff;
@@ -231,8 +233,8 @@
 				justify-content: flex-end;
 				position: relative;
 				box-sizing: border-box;
-				width: 150rpx;
-				height: 150rpx;
+				width: 130rpx;
+				height: 130rpx;
 				margin: 20rpx 0;
 				padding: 10rpx;
 			}
@@ -244,8 +246,8 @@
 				transform: translateX(-50%);
 				content: "";
 				display: block;
-				width: 100rpx;
-				height: 100rpx;
+				width: 80rpx;
+				height: 80rpx;
 				background-size: contain;
 				background-repeat: no-repeat;
 			}
@@ -275,15 +277,37 @@
 			overflow: hidden;
 			flex: 1;
 			.card {
+				padding: 0 20rpx;
 				position: relative;
-				padding: 20rpx;
 				margin-bottom: 20rpx;
+				.card-item {
+					display: flex;
+					flex-direction: column;
+					padding: 20rpx;
+					border-radius: 20rpx;
+					.user {
+						width: 100%;
+						justify-content: flex-start;
+						column-gap: 20rpx;
+						font-weight: bold;
+					}
+					.content {
+						.card-content {
+							display: -webkit-box;
+							-webkit-box-orient: vertical;
+							-webkit-line-clamp: 3;
+							overflow: hidden;
+							text-overflow: ellipsis;
+						}
+					}
+				}
 				.controls {
 					display: flex;
 					column-gap: 15rpx;
 					position: absolute;
 					right: 0rpx;
 					bottom: 0rpx;
+					transform: scale(0.8);
 					// 文章点赞数
 					// 文章收藏数
 					.likeCount,

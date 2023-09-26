@@ -38,7 +38,7 @@ export default {
       }
       // 保存全局登录态
       this.setUserStatus(res.data)
-      console.log("登录成功")
+      console.log("登录成功") 
       // 返回我的页面
       uni.navigateBack(1)
     }

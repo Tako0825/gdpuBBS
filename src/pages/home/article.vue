@@ -1,42 +1,71 @@
 <template>
   <view class="container">
 
-    <!-- 用户头像、用户名 -->
-    <view class="author">
-        <view class="author-nickName">{{ authorName }}</view>
-        <view class="author-avatar">
-            <img :src="avatar" alt="用户头像">
-        </view>
-    </view>
     <!-- 文章详情 -->
-    <view class="article">
-        <view class="createtime">{{ createtime }}</view>
-        <view class="content">{{ content }}</view>
-        <view class="like">{{ like }}</view>
-        <view class="likeNumber">{{ likeNumber }}</view>
-        <view class="star">{{ star }}</view>
-        <view class="stars">{{ stars?stars:0 }}</view>
+    <view class="cu-card dynamic">
+        <view class="cu-item shadow">
+            <view class="cu-list menu-avatar">
+                <view class="cu-item">
+                    <view class="cu-avatar round lg" :style="{ 'background-image' : `url(${avatar})` }"></view>
+                    <view class="content flex-sub">
+                        <view>{{ authorName }}</view>
+                        <view class="text-gray text-sm flex justify-between">
+                            {{ createtime }}
+                        </view>
+                    </view>
+                </view>
+            </view>
+            <view class="text-content">
+                {{ content }}
+            </view>
+            <view class="controls text-gray text-sm text-right padding">
+                <view class="likeCount">
+                    <like :status="like"/>
+                    <text>{{ likeNumber }}</text>
+                </view>
+                <view class="starCount">
+                    <star :status="star"/>
+                    <text>{{ stars?stars:0 }}</text>
+                </view>
+            </view>
+        </view>
     </view>
 
-    <!-- 评论 -->
-    <!-- author | authorPicture | content | createtime -->
-    <view class="commentList" v-for="(item, index) in commentList" :key="index">
-        <view class="user">
-            <view class="user-avatar">
-                <img :src="item.authorPicture" alt="">
+    <!-- 评论列表 -->
+    <view 
+        v-for="(item, index) in commentList"
+        :key="index"
+        class="cu-list menu-avatar comment solids-top"
+    >
+        <view class="cu-item">
+            <view class="cu-avatar round" :style="{ 'background-image' : `url(${avatar})` }">
+                <view>{{ item.author }}</view>
             </view>
-            <view class="user-nickName">{{ item.author }}</view>
+            <view class="content">
+                <view class="padding-sm radius margin-top-sm text-sm light bg-blue">
+                    <view class="flex">
+                        <view class="flex-sub text-grey">{{ item.content }}</view>
+                    </view>
+                </view>
+                <view class="margin-top-sm flex justify-between">
+                    <view class="text-gray text-df">{{ item.createtime }}</view>
+                </view>
+            </view>
         </view>
-        <view class="comment-content">{{ item.content }}</view>
-        <view class="comment-createtime">{{ item.createtime }}</view>
     </view>
-  </view>
+</view>
+
 </template>
 
 <script>
 import http from "@/utils/http"
+import like from "@/components/like"
+import star from "@/components/like"
 
 export default {
+    components: {
+        like, star
+    },
     data() {
         return {
             userId: 1,
@@ -87,8 +116,8 @@ export default {
             const { data: user } = await http(`/users/${this.authorId}`, {
                 method: "GET"
             })
-            const { picture = "../../static/avatar.png", nickName } = user
-            this.avatar = picture?picture:"../../static/avatar.png"
+            const { picture, nickName } = user
+            this.avatar = picture
             this.authorName = nickName
         },
 
@@ -103,10 +132,27 @@ export default {
 }
 </script>
 
-<style>
-    .article {
+<style lang="less">
+    .controls {
         display: flex;
-        flex-direction: column;
-        row-gap: 40rpx;
+        column-gap: 15rpx;
+        position: absolute;
+        right: 0rpx;
+        bottom: 0rpx;
+        transform: scale(0.8);
+        // 文章点赞数
+        // 文章收藏数
+        .likeCount,
+        .starCount {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            column-gap: 5rpx;
+            height: 50rpx;
+            img {
+                width: 50rpx;
+                height: 50rpx;
+            }
+        }
     }
 </style>
