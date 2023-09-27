@@ -4,7 +4,8 @@
 		<!-- 分类导航 -->
 		<view class="nav-container">
 			<view class="nav">
-				<text class="nav-item"
+				<text 
+					class="nav-item slide-left"
 					v-for="(item) in categoryList"
 					:key="item.id"
 					@click="findCategory(item.id)"
@@ -29,7 +30,7 @@
 				v-for="(item) in articleList"
 				:key="item.articleId"
 				@click="pageToArticle(item.articleId)"
-				class="card cu-list menu-avatar comment solids-top shadow"
+				class="card cu-list menu-avatar comment solids-top shadow slide-bottom"
 			>
 				<view class="card-item cu-item flex">
 					<view class="user flex align-center">
@@ -69,6 +70,7 @@
 	import like from "@/components/like"
 	import star from "@/components/star"
 	import GdpuModal from "@/components/gdpu-modal"
+	import "@/animation/slide.css"
 
 	export default {
 		components: {

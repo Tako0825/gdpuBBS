@@ -1,0 +1,29 @@
+@keyframes slide-bottom {
+    from {
+        transform: translateY(60%);
+        opacity: .1;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.slide-bottom {
+    animation: .5s linear 0s 1 alternate slide-bottom;
+}
+
+@keyframes slide-left {
+    from {
+        transform: translateX(-60%);
+        opacity: .1;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.slide-left {
+    animation: .5s linear 0s 1 alternate slide-left;
+}
