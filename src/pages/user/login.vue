@@ -50,7 +50,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style scoped lang="less">
 .white-background {
   width: 100vw;
   height: 100vh;

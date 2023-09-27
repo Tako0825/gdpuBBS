@@ -22,7 +22,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style scoped lang="less">
     .bar {
         padding: 100rpx 0;
     }

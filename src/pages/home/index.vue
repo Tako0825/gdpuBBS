@@ -15,6 +15,10 @@
 			</view>
 		</view>
 
+		<!-- 提示 -->
+		<GdpuMessage></GdpuMessage>
+		
+		<!-- 弹窗 - 登录提示 -->
 		<GdpuModal
 			v-bind:show="authShow"
 			v-on:authShow="authShow=$event"
@@ -48,11 +52,11 @@
 						</view>
 						<view class="controls">
 							<view class="likeCount">
-								<like :status="item.isLike"/>
+								<div class="icon"><like :status="item.isLike"/></div>
 								<text>{{ item.likeCount }}</text>
 							</view>
 							<view class="starCount">
-								<star :status="item.isStar"/>
+								<div class="icon"><star :status="item.isStar"/></div>
 								<text>{{ item.starCount }}</text>
 							</view>
 						</view>
@@ -70,11 +74,12 @@
 	import like from "@/components/like"
 	import star from "@/components/star"
 	import GdpuModal from "@/components/gdpu-modal"
+	import GdpuMessage from "@/components/gdpu-message"
 	import "@/animation/slide.css"
 
 	export default {
 		components: {
-			like, star, GdpuModal
+			like, star, GdpuModal, GdpuMessage
 		},
 		data() {
 			return {
@@ -216,7 +221,7 @@
 	}
 </script>
 
-<style lang="less">
+<style scoped lang="less">
 	.container {
 		display: flex;
 		flex-direction: row;
@@ -331,7 +336,7 @@
 						align-items: center;
 						column-gap: 5rpx;
 						height: 50rpx;
-						img {
+						.icon {
 							width: 50rpx;
 							height: 50rpx;
 						}

@@ -94,7 +94,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style scoped lang="less">
   .container {
     display: flex;
     flex-direction: column;
@@ -137,7 +137,7 @@ export default {
       justify-content: center;
       column-gap: 40rpx;
       width: 650rpx;
-      padding: 80rpx 0;
+      padding: 40rpx 0;
       border-top: 1px solid #ccc;
       border-bottom: 1px solid #ccc;
       >view {

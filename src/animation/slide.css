@@ -27,3 +27,27 @@
 .slide-left {
     animation: .5s linear 0s 1 alternate slide-left;
 }
+
+@keyframes slide-bottom-top {
+    0% {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    10% {
+        transform: translateY(0%);
+        opacity: 1;
+    }
+    60% {
+        transform: translateY(0%);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-300%);
+        opacity: 0;
+    }
+}
+
+.slide-bottom-top {
+    animation: 2s linear 0s 1 alternate slide-bottom-top;
+}
+
