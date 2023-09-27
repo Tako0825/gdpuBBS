@@ -14,12 +14,18 @@
 			</view>
 		</view>
 
+		<GdpuModal
+			v-bind:show="authShow"
+			v-on:authShow="authShow=$event"
+			v-bind:content="'请先进行登录'"
+		></GdpuModal>
+
 		<!-- 加载组件 -->
 		<view v-if="sleepStatus" class="loading">loading...</view>
 
 		<!-- 文章列表 -->
 		<view class="article">
-			<view 
+			<view
 				v-for="(item) in articleList"
 				:key="item.articleId"
 				@click="pageToArticle(item.articleId)"
@@ -62,10 +68,11 @@
 	import formatDate from "@/utils/formatDate"
 	import like from "@/components/like"
 	import star from "@/components/star"
+	import GdpuModal from "@/components/gdpu-modal"
 
 	export default {
 		components: {
-			like, star
+			like, star, GdpuModal
 		},
 		data() {
 			return {
@@ -74,6 +81,7 @@
 				pageSize: 10,
 				categoryList: new Array(),
 				articleList: new Array(),
+				authShow: false
 			}
 		},
 		computed: {
@@ -169,6 +177,9 @@
 
 			// 跳转至指定文章
 			pageToArticle(id) {
+				if(!this.$store.state.user) {
+					return this.authShow = true
+				}
 				uni.navigateTo({
 					 url: `./article?id=${id}`,
 				});
@@ -292,6 +303,7 @@
 						font-weight: bold;
 					}
 					.content {
+						width: 100%;
 						.card-content {
 							display: -webkit-box;
 							-webkit-box-orient: vertical;
