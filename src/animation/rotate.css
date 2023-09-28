@@ -1,0 +1,16 @@
+*:has(.rotate-infinite) {
+    --rotate-infinite: 360deg;
+}
+
+@keyframes rotate-infinite {
+    from {
+        transform: rotate(0);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.rotate-infinite {
+    animation: 1s linear 0s infinite rotate-infinite;
+}

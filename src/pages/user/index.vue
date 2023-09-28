@@ -99,7 +99,7 @@ export default {
       // ...todo
     }
   },
-  onShow() {
+  async onShow() {
     if(!(this.user?.id == this.$store.state.user?.id)) {
       // 登录 - 用户信息更新
       this.user = this.$store.state.user

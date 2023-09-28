@@ -49,18 +49,22 @@ export default {
           password: this.password
         }
       })
+      // 异常处理
       if(res.status === 500) {
         return this.messageList.push({
           content: "用户名和密码不匹配"
         })
       }
       // 保存全局登录态
+      await wx.setStorage({
+          key: "user",
+          data: res.data
+      })
       this.setUserStatus(res.data)
       console.log("登录成功") 
       // 返回我的页面
       uni.navigateBack(1)
     }
-
   }
 }
 </script>

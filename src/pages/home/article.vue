@@ -1,8 +1,10 @@
 <template>
   <view class="container">
 
+    <GdpuLoadingVue v-if="!article"/>
+
     <!-- 文章详情 -->
-    <view class="cu-card dynamic">
+    <view v-if="article" class="cu-card dynamic">
         <view class="cu-item shadow">
             <view class="cu-list menu-avatar">
                 <view class="cu-item">
@@ -12,23 +14,13 @@
                     <view class="content flex-sub">
                         <view>{{ authorName }}</view>
                         <view class="text-gray text-sm flex justify-between">
-                            {{ article.createtime }}
+                            {{ formatDate(article.createtime) }}
                         </view>
                     </view>
                 </view>
             </view>
             <view class="text-content">
                 {{ article.content }}
-            </view>
-            <view class="controls text-gray text-sm text-right padding">
-                <view class="likeCount">
-                    <like :status="like"/>
-                    <text>{{ article.likeNumber }}</text>
-                </view>
-                <view class="starCount">
-                    <star :status="article.star"/>
-                    <text>{{ article.stars?article.stars:0 }}</text>
-                </view>
             </view>
         </view>
     </view>
@@ -37,28 +29,36 @@
     <view 
         v-for="(item, index) in commentList"
         :key="index"
-        class="cu-list menu-avatar comment solids-top"
+        class="commentList cu-list menu-avatar comment solids-top"
     >
-        <view class="cu-item">
+        <view class="comment cu-item">
             <view class="avatar cu-avatar round">
                 <img :src="item.authorPicture" alt="用户头像">
             </view>
             <view class="content">
                 <view class="text-grey">{{ item.author }}</view>
-                <view class="padding-sm radius margin-top-sm text-sm light bg-blue">
+                <view class="padding-sm radius margin-top-sm text-sm light">
                     <view class="flex">
                         <view class="flex-sub text-grey">{{ item.content }}</view>
                     </view>
                 </view>
                 <view class="margin-top-sm flex justify-between">
-                    <view class="text-gray text-df">{{ item.createtime }}</view>
+                    <view class="text-gray text-df">{{ formatDate(item.createtime) }}</view>
                 </view>
             </view>
         </view>
     </view>
 
-    <view>
-        <input type="text">
+    <!-- 控件 -->
+    <view v-if="article" class="controls">
+        <view class="control">
+            <view class="icon"><like :status="article.like"/></view>
+            <text class="count">{{ article.likeNumber }}</text>
+        </view>
+        <view class="control">
+            <view class="icon"><star :status="article.star"/></view>
+            <text class="count">{{ article.stars?article.stars:0 }}</text>
+        </view>
     </view>
 </view>
 
@@ -67,12 +67,15 @@
 <script>
 import http from "@/utils/http"
 import auth from "@/utils/auth"
+import sleep from "@/utils/sleep"
+import formatDate from "@/utils/formatDate"
 import like from "@/components/like"
-import star from "@/components/like"
+import star from "@/components/star"
+import GdpuLoadingVue from "@/components/gdpu-loading.vue"
 
 export default {
     components: {
-        like, star
+        like, star, GdpuLoadingVue
     },
     data() {
         return {
@@ -81,9 +84,10 @@ export default {
             // 作者详情
             avatar: undefined,
             authorName: undefined,
-            category: undefined,
             // 评论列表
-            commentList: new Array()
+            commentList: new Array(),
+            // todo - 所属分类
+            category: undefined,
         }
     },
     computed: {
@@ -98,12 +102,16 @@ export default {
                 url: "./auth"
             })
         }
+        await sleep()
         await this.getArticle(articleId)
         await this.getAuthor()
         await this.getComment(articleId)
     },
 
     methods: {
+        formatDate,
+        sleep,
+
         // 获取文章详情
         async getArticle(articleId) {
             const res = await http(`/articles/?articleId=${articleId}&userId=${this.userId}`, {
@@ -144,34 +152,55 @@ export default {
 </script>
 
 <style scoped lang="less">
-    .avatar {
-        overflow: hidden;
-        img {
-            width: 100%!important;
-            height: 100%!important;
-        }
-    }
-
-    .controls {
+    .container {
         display: flex;
-        column-gap: 15rpx;
-        position: absolute;
-        right: 0rpx;
-        bottom: 0rpx;
-        transform: scale(0.8);
-        // 文章点赞数
-        // 文章收藏数
-        .likeCount,
-        .starCount {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            column-gap: 5rpx;
-            height: 50rpx;
+        flex-direction: column;
+        align-items: flex-start;
+        // 文章详情
+        .avatar {
+            overflow: hidden;
             img {
-                width: 50rpx;
-                height: 50rpx;
+                width: 100%!important;
+                height: 100%!important;
+            }
+        }
+
+        // 评论列表
+        .commentList {
+            .comment {
+                width: 570rpx;
+                margin-left: 30rpx;
+                border-radius: 10rpx;
+            }
+        }
+
+        // 控件
+        .controls {
+            position: fixed;
+            right: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            row-gap: 40rpx;
+            width: 150rpx;
+            height: 100vh;
+            background-color: transparent;
+            .control {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                align-items: center;
+                row-gap: 10rpx;
+                font-size: 16px;
+                .icon {
+                    width: 70rpx;
+                    height: 70rpx;
+                }
             }
         }
     }
+
+
 </style>

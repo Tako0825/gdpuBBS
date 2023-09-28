@@ -23,7 +23,7 @@
 		></GdpuModal>
 
 		<!-- 加载组件 -->
-		<view v-if="sleepStatus" class="loading">loading...</view>
+		<GdpuLoading v-if="!articleList.length"/>
 
 		<!-- 文章列表 -->
 		<view class="article">
@@ -39,7 +39,7 @@
 						<view class="text-grey ">{{ item.authorName }}</view>
 					</view>
 					<view class="content">
-						<view class="bg-grey padding-sm margin-top-sm margin-bottom-sm radius text-sm">
+						<view class="text-black padding-sm margin-top-sm margin-bottom-sm radius text-sm">
 							<view class="flex">
 								<view class="card-content">{{ item.articleBrief }}</view>
 							</view>
@@ -68,19 +68,20 @@
 <script>
 	import http from "@/utils/http"
 	import formatDate from "@/utils/formatDate"
+	import sleep from "@/utils/sleep"
 	import like from "@/components/like"
 	import star from "@/components/star"
 	import GdpuModal from "@/components/gdpu-modal"
 	import GdpuMessage from "@/components/gdpu-message"
+	import GdpuLoading from "@/components/gdpu-loading"
 	import "@/animation/slide.css"
 
 	export default {
 		components: {
-			like, star, GdpuModal, GdpuMessage
+			like, star, GdpuModal, GdpuMessage, GdpuLoading
 		},
 		data() {
 			return {
-				sleepStatus: false,
 				pageNum: 1,
 				pageSize: 10,
 				categoryList: new Array(),
@@ -100,11 +101,13 @@
 			}
 		},
 		async onLoad() {
+			await sleep(300)
 			await this.getCategoryList()
 			await this.getArticleList()
 		},
 		methods: {
 			formatDate,
+			sleep,
 
 			// 获取分类列表
 			async getCategoryList() {
@@ -120,7 +123,7 @@
 
 			// 查询文章列表
 			async getArticleList() {
-				await this.sleep()
+				await sleep()
 				const { data } = await http("/articles/wx/articleInfo", {
 					method: "GET",
 					data: {
@@ -130,14 +133,12 @@
 					}
 				})
 				await this.refreshLikeStar(data)
-				await this.wakeup()
 				this.articleList = data
 			},
 
 			// 分类查询文章
 			async findCategory(id) {
 				this.articleList = []
-				await this.sleep()
 				const { data } = await http("/articles/wx/articleInfo", {
 					method: "GET",
 					data: {
@@ -147,7 +148,6 @@
 					}
 				})
 				await this.refreshLikeStar(data)
-				await this.wakeup()
 				this.articleList = data
 			},
 
@@ -187,21 +187,6 @@
 				uni.navigateTo({
 					 url: `./article?id=${id}`,
 				});
-			},
-
-			// 睡觉函数
-			async sleep(duration = 250) {
-				return new Promise(resolve => {
-					this.sleepStatus = true
-					setTimeout(() => {
-						resolve()
-					}, duration)
-				})
-			},
-
-			// 唤醒函数
-			async wakeup() {
-				this.sleepStatus = false
 			},
 
 			// 刷新当前登录态对应的点赞收藏状态

@@ -11,7 +11,7 @@ const store = new Vuex.Store({
 	},
     mutations: {
 		//相当于同步的操作
-        setUserStatus(state, payload) {
+        async setUserStatus(state, payload) {
             /**
              * | id | name | password | age | gender | email | picture |
              * | jwtToken | articleCount | followers | subscribes |
