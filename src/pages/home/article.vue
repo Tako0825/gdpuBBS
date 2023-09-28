@@ -56,6 +56,10 @@
             </view>
         </view>
     </view>
+
+    <view>
+        <input type="text">
+    </view>
 </view>
 
 </template>

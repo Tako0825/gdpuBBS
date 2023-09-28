@@ -14,9 +14,6 @@
 				</text>
 			</view>
 		</view>
-
-		<!-- 提示 -->
-		<GdpuMessage></GdpuMessage>
 		
 		<!-- 弹窗 - 登录提示 -->
 		<GdpuModal

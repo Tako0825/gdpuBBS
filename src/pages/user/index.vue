@@ -37,20 +37,33 @@
         <img src="../../static/right.png" alt="右箭头">
       </view>
     </view>
+
+    <!-- 提示 -->
+    <component 
+      :is="'GdpuMessage'" 
+      v-for="(item, index) in messageList" 
+      :key="index"
+      v-bind:content="item.content"
+    ></component>
   </view>
 </template>
 
 <script>
 import avatar from "@/static/user.png"
+import GdpuMessage from "@/components/gdpu-message"
 import "@/animation/slide.css"
 
 export default {
+  components: {
+    GdpuMessage
+  },
   data() {
     return {
       // | age | email | articleCount | followers | subscribes | gender |
       // | id | jwtToken | name | password | picture |
       user: this.$store.state.user,
-      avatar
+      avatar,
+      messageList:[]
     }
   },
   methods: {
@@ -88,7 +101,12 @@ export default {
   },
   onShow() {
     if(!(this.user?.id == this.$store.state.user?.id)) {
+      // 登录 - 用户信息更新
       this.user = this.$store.state.user
+      // 登录 - 成功提示
+      this.messageList.push({
+        content: "登录成功"
+      })
     }
   }
 }
@@ -99,7 +117,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 40rpx 0;
+    padding: 160rpx 0 40rpx;
     row-gap: 40rpx;
     background-color: #fff;
 

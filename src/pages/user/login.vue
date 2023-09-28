@@ -6,21 +6,35 @@
       <input name="password" type="text" v-model="password">
       <button class="login cu-btn" type="button" @click="login">登 录</button>
     </view>
+
+    <!-- 失败提示 -->
+    <component 
+      :is="'GdpuMessage'" 
+      v-for="(item, index) in messageList" 
+      :key="index"
+      v-bind:content="item.content"
+    ></component>
   </view>
+
+  
 </template>
 
 <script>
 import http from "@/utils/http"
+import GdpuMessage from "@/components/gdpu-message"
 import { mapMutations } from "vuex"
 
 export default {
+  components: {
+    GdpuMessage
+  },
   data() {
     return {
       username: "",
-      password: ""
+      password: "",
+      messageList: []
     }
   },
-
   methods: {
     ...mapMutations([
       "setUserStatus"
@@ -36,8 +50,9 @@ export default {
         }
       })
       if(res.status === 500) {
-        console.log("登录失败")
-        return uni.navigateBack(1)
+        return this.messageList.push({
+          content: "用户名和密码不匹配"
+        })
       }
       // 保存全局登录态
       this.setUserStatus(res.data)

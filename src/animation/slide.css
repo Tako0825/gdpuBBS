@@ -48,6 +48,6 @@
 }
 
 .slide-bottom-top {
-    animation: 2s linear 0s 1 alternate slide-bottom-top;
+    animation: 2s linear 0s 1 forwards slide-bottom-top;
 }
 
