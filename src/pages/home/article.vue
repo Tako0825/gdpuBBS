@@ -1,10 +1,10 @@
 <template>
   <view class="container">
 
-    <GdpuLoadingVue v-if="!article"/>
+    <GdpuLoading v-if="!article"/>
 
     <!-- 文章详情 -->
-    <view v-if="article" class="cu-card dynamic">
+    <view v-if="article" class="article cu-card dynamic">
         <view class="cu-item shadow">
             <view class="cu-list menu-avatar">
                 <view class="cu-item">
@@ -60,6 +60,15 @@
             <text class="count">{{ article.stars?article.stars:0 }}</text>
         </view>
     </view>
+
+    <!-- 评论框 -->
+    <view class="comment-box">
+        <input class="box" v-model="myInput" type="text">
+        <button :disabled="!myInput" class="confirm cu-btn" type="button" @click="sendMyInput">发送</button>
+    </view>
+
+    <!-- 消息提示 -->
+    <GdpuMessage v-for="(item, index) in messageList" :key="index" v-bind:content="item.content"/>
 </view>
 
 </template>
@@ -71,11 +80,12 @@ import sleep from "@/utils/sleep"
 import formatDate from "@/utils/formatDate"
 import like from "@/components/like"
 import star from "@/components/star"
-import GdpuLoadingVue from "@/components/gdpu-loading.vue"
+import GdpuLoading from "@/components/gdpu-loading.vue"
+import GdpuMessage from '@/components/gdpu-message.vue'
 
 export default {
     components: {
-        like, star, GdpuLoadingVue
+        like, star, GdpuLoading, GdpuMessage
     },
     data() {
         return {
@@ -88,6 +98,10 @@ export default {
             commentList: new Array(),
             // todo - 所属分类
             category: undefined,
+            // 当前输入内容
+            myInput: "",
+            // 消息提示列表
+            messageList: new Array()
         }
     },
     computed: {
@@ -102,6 +116,9 @@ export default {
                 url: "./auth"
             })
         }
+        // 监听评论框聚焦事件 - 评论框的高度由键盘高度决定
+        wx.onKeyboardHeightChange(res => {
+        })
         await sleep()
         await this.getArticle(articleId)
         await this.getAuthor()
@@ -119,6 +136,7 @@ export default {
             })
             const { content, createtime, like, likeNumber, star, stars, authorId, articleCategory } = res.data.data
             this.article = {
+                articleId,
                 content,
                 createtime,
                 like,
@@ -146,6 +164,35 @@ export default {
                 methods: "GET"
             })
             this.commentList = commentList
+        },
+
+        // 发送评论
+        async sendMyInput() {
+            const content = this.myInput
+            const res = await http("/comments/sendComment", {
+                method: "POST",
+                header: {
+                    Authorization: `Bearer ${this.$store.state.user.jwtToken}`
+                },
+                data: {
+                    content,
+                    commenterId: this.$store.state.user.id,
+                    attachArticle: +this.article.articleId,
+                    createtime: new Date(),
+                    id: 0
+                }
+            })
+            await this.getComment(this.article.articleId)
+            // 隐藏键盘并取消聚焦
+            wx.hideKeyboard();
+            // 清空输入框内容
+            this.myInput = ""
+            // 消息提示 - 评论成功
+            if(res.data.success) {
+                this.messageList.push({
+                    content: "评论成功"
+                })
+            }
         }
     }
 }
@@ -156,12 +203,20 @@ export default {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        // 文章详情
         .avatar {
             overflow: hidden;
             img {
                 width: 100%!important;
                 height: 100%!important;
+            }
+        }
+
+        // 文章详情
+        .article {
+            width: 100%;
+            .content {
+                display: flex;
+                column-gap: 20rpx;
             }
         }
 
@@ -198,6 +253,40 @@ export default {
                     width: 70rpx;
                     height: 70rpx;
                 }
+            }
+        }
+
+        // 评论框
+        .comment-box {
+            position: fixed;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            display: flex;
+            column-gap: 20rpx;
+            width: 750rpx;
+            padding: 0 30rpx;
+            background-color: #fff;
+            .box {
+                flex: 1;
+                border-radius: 20rpx;
+                min-height: 80rpx;
+                border: 2px solid #ccc;
+                padding: 0 20rpx;
+                margin: 20rpx 0 40rpx;
+                transition: all .5s ease 0s;
+                &:hover {
+                    border: 2px solid #3498db;
+                }
+            }
+            .confirm {
+                width: 120rpx;
+                height: 80rpx;
+                align-self: flex-end;
+                margin-bottom: 40rpx;
+                background-color: #3498db!important;
+                color: #fff;
+                font-weight: bold;
             }
         }
     }
