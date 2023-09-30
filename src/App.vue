@@ -1,4 +1,5 @@
 <script>
+	import "@/animation/slide.css"
 	import { mapMutations } from 'vuex'
 	export default {
 		onLaunch: async function() {
