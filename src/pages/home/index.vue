@@ -1,10 +1,14 @@
 <template>
 	<view class="container">
 		<!-- 分类列表 -->
-		<CategoryList></CategoryList>
+		<view class="category-list">
+			<CategoryList></CategoryList>
+		</view>
 		
 		<!-- 文章列表 -->
-		<ArticleList></ArticleList>
+		<view class="article-list">
+			<ArticleList></ArticleList>
+		</view>
 	</view>
 </template>
 
@@ -33,19 +37,14 @@
 <style scoped lang="less">
 	.container {
 		display: flex;
-		flex-direction: row;
-		row-gap: 50rpx;
-		width: 750rpx;
-		min-height: 100vh;
-		overflow-x: hidden;
-		background-color: #ecf0f1;
-		// 加载组件
-		.loading {
-			position: fixed;
-			top: 50%;
-			left: 50%;
-			transform: translate(-50%, -50%);
-			font-weight: bold;
+		.category-list {
+			width: 150rpx;
+			min-height: 100vh;
+		}
+
+		.article-list {
+			width: 600rpx;
+			min-height: 100vh;
 		}
 	}
 </style>

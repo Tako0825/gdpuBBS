@@ -1,5 +1,5 @@
 <template>
-<view>
+<view class="article-container">
     <view class="article">
         <view
             v-for="(item) in getArticleList"
@@ -14,9 +14,7 @@
                 </view>
                 <view class="content">
                     <view class="text-black padding-sm margin-top-sm margin-bottom-sm radius text-sm">
-                        <view class="flex">
-                            <view class="card-content">{{ item.articleBrief }}</view>
-                        </view>
+                        <view class="card-content">{{ item.articleBrief }}</view>
                     </view>
                     <view class="flex justify-between">
                         <view class="text-gray text-df">{{ formatDate(item.creatTime) }}</view>
@@ -105,11 +103,18 @@ export default {
 </script>
 
 <style scoped lang="less">
+.article-container {
+    width: 100%;
+    height: 100%;
+
+}
 // 文章列表
 .article {
+    width: 100%;
+    height: 100%;
     overflow: hidden;
-    flex: 1;
     .card {
+        width: 100%!important;
         padding: 0 20rpx;
         position: relative;
         margin-bottom: 20rpx;
@@ -126,7 +131,9 @@ export default {
             }
             .content {
                 width: 100%;
+                overflow: hidden;
                 .card-content {
+                    max-width: 100%!important;
                     display: -webkit-box;
                     -webkit-box-orient: vertical;
                     -webkit-line-clamp: 3;
