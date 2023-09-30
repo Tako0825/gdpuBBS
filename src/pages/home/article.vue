@@ -1,29 +1,7 @@
 <template>
   <view class="container">
 
-    <GdpuLoading v-if="!article"/>
-
-    <!-- 文章详情 -->
-    <view v-if="article" class="article cu-card dynamic">
-        <view class="cu-item shadow">
-            <view class="cu-list menu-avatar">
-                <view class="cu-item">
-                    <view class="avatar cu-avatar round lg">
-                        <img :src="avatar" alt="作者头像">
-                    </view>
-                    <view class="content flex-sub">
-                        <view>{{ authorName }}</view>
-                        <view class="text-gray text-sm flex justify-between">
-                            {{ formatDate(article.createtime) }}
-                        </view>
-                    </view>
-                </view>
-            </view>
-            <view class="text-content">
-                {{ article.content }}
-            </view>
-        </view>
-    </view>
+    <ArticleDetail v-bind:articleId="articleId"/>
 
     <!-- 评论列表 -->
     <view 
@@ -49,18 +27,6 @@
         </view>
     </view>
 
-    <!-- 控件 -->
-    <view v-if="article" class="controls">
-        <view class="control">
-            <view class="icon"><like :status="article.like"/></view>
-            <text class="count">{{ article.likeNumber }}</text>
-        </view>
-        <view class="control">
-            <view class="icon"><star :status="article.star"/></view>
-            <text class="count">{{ article.stars?article.stars:0 }}</text>
-        </view>
-    </view>
-
     <!-- 评论框 -->
     <view class="comment-box">
         <input class="box" v-model="myInput" type="text">
@@ -75,29 +41,26 @@
 
 <script>
 import http from "@/utils/http"
-import auth from "@/utils/auth"
 import sleep from "@/utils/sleep"
 import formatDate from "@/utils/formatDate"
 import like from "@/components/like"
 import star from "@/components/star"
 import GdpuLoading from "@/components/gdpu-loading.vue"
 import GdpuMessage from '@/components/gdpu-message.vue'
+import ArticleDetail from "@/views/article/article-detail.vue"
 
 export default {
     components: {
-        like, star, GdpuLoading, GdpuMessage
+        like, star, GdpuLoading, GdpuMessage, ArticleDetail
     },
     data() {
         return {
-            // 文章详情
-            article: null,
+            articleId: null,
             // 作者详情
             avatar: undefined,
             authorName: undefined,
             // 评论列表
             commentList: new Array(),
-            // todo - 所属分类
-            category: undefined,
             // 当前输入内容
             myInput: "",
             // 消息提示列表
@@ -111,42 +74,15 @@ export default {
     },
     async onLoad(params) {
         const { id: articleId } = params
-        if(!auth()) {
-            return uni.navigateTo({
-                url: "./auth"
-            })
-        }
-        // 监听评论框聚焦事件 - 评论框的高度由键盘高度决定
-        wx.onKeyboardHeightChange(res => {
-        })
+        this.articleId = articleId
         await sleep()
-        await this.getArticle(articleId)
-        await this.getAuthor()
-        await this.getComment(articleId)
+        // await this.getAuthor()
+        // await this.getComment(articleId)
     },
 
     methods: {
         formatDate,
         sleep,
-
-        // 获取文章详情
-        async getArticle(articleId) {
-            const res = await http(`/articles/?articleId=${articleId}&userId=${this.userId}`, {
-                method: "GET"
-            })
-            const { content, createtime, like, likeNumber, star, stars, authorId, articleCategory } = res.data.data
-            this.article = {
-                articleId,
-                content,
-                createtime,
-                like,
-                likeNumber,
-                star,
-                stars,
-                authorId,
-                articleCategory,
-            }
-        },
 
         // 获取作者详情 (头像、用户名)
         async getAuthor() {
@@ -211,48 +147,12 @@ export default {
             }
         }
 
-        // 文章详情
-        .article {
-            width: 100%;
-            .content {
-                display: flex;
-                column-gap: 20rpx;
-            }
-        }
-
         // 评论列表
         .commentList {
             .comment {
                 width: 570rpx;
                 margin-left: 30rpx;
                 border-radius: 10rpx;
-            }
-        }
-
-        // 控件
-        .controls {
-            position: fixed;
-            right: 0;
-            top: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            row-gap: 40rpx;
-            width: 150rpx;
-            height: 100vh;
-            background-color: transparent;
-            .control {
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-                align-items: center;
-                row-gap: 10rpx;
-                font-size: 16px;
-                .icon {
-                    width: 70rpx;
-                    height: 70rpx;
-                }
             }
         }
 
