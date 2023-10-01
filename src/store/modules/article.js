@@ -6,6 +6,7 @@ export default {
             id: null, // 当前文章id
             article: null, // 当前文章详情
             author: null, // 当前文章作者
+            commentList: new Array(), // 当前评论列表
             articleList: new Array(), // 首页文章列表
             pageNum: 1,
             pageSize: 10
@@ -23,6 +24,9 @@ export default {
         },
         getAuthor(state) {
             return state.author
+        },
+        getCommentList(state) {
+            return state.commentList
         }
     },
     mutations: {
@@ -39,6 +43,9 @@ export default {
         },
         setAuthor(state, payload) {
             state.author = payload
+        },
+        setCommentList(state, payload) {
+            state.commentList = payload
         }
     },
     actions: {
@@ -62,6 +69,8 @@ export default {
             })
             const author = await dispatch("fetchAuthor", res.data.authorId)
             commit("setAuthor", author)
+            const commentList = await dispatch("fetchCommentList", state.id)
+            commit("setCommentList", commentList)
             return res.data
         },
 
@@ -75,6 +84,35 @@ export default {
                 picture,
                 nickName
             }
+        },
+
+        // 请求 - 该文章对应评论列表
+        async fetchCommentList({ state }, payload) {
+            const { data } = await http(`/comments/${payload}`, {
+                methods: "GET"
+            })
+            return data
+        },
+
+        // 请求 - 发送评论
+        async sendComment({ state, commit, dispatch }, payload) {
+            const res = await http("/comments/sendComment", {
+                method: "POST",
+                header: {
+                    Authorization: `Bearer ${payload.user.jwtToken}`
+                },
+                data: {
+                    content: payload.content,
+                    commenterId: payload.user.id,
+                    attachArticle: payload.articleId,
+                    createtime: new Date(),
+                    id: 0
+                }
+            })
+            // 发送评论后 - 刷新评论列表
+            const commentList = await dispatch("fetchCommentList", payload.articleId)
+            commit("setCommentList", commentList)
+            return res
         }
     }
 }

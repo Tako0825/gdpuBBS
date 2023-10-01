@@ -48,9 +48,6 @@ import star from "@/components/star"
 import GdpuLoading from "@/components/gdpu-loading"
 const { mapGetters, mapMutations, mapActions } = createNamespacedHelpers("article")
 export default {
-    props: [
-      "articleId"  
-    ],
     components: {
         like, star, GdpuLoading
     },
@@ -74,7 +71,6 @@ export default {
         ]),
         // 获取文章详情
         async myArticleDetail() {
-            this.setArticleId(this.articleId)
             const article = await this.fetchArticleDetail(this.$store.state.user.id)
             this.setArticle(article)
         }
