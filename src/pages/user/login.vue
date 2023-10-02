@@ -2,18 +2,17 @@
   <view class="white-background">
     <view class="container">
       <view class="gradient-text">Welcome to GDPU BBS!</view>
-      <input name="username" type="text" v-model="username">
-      <input name="password" type="text" v-model="password">
+      <input :class="username?'inputing':''" name="username" type="text" v-model="username">
+      <input :class="password?'inputing':''" name="password" type="text" v-model="password">
       <button class="login cu-btn" type="button" @click="login">登 录</button>
     </view>
 
     <!-- 失败提示 -->
-    <component 
-      :is="'GdpuMessage'" 
+    <GdpuMessage 
       v-for="(item, index) in messageList" 
       :key="index"
       v-bind:content="item.content"
-    ></component>
+    />
   </view>
 
   
@@ -32,14 +31,13 @@ export default {
     return {
       username: "",
       password: "",
-      messageList: []
+      messageList: [],
     }
   },
   methods: {
     ...mapMutations([
       "setUserStatus"
     ]),
-
     // 登录
     async login() {
       const { data: res } = await http("/users/login", {
@@ -61,9 +59,10 @@ export default {
           data: res.data
       })
       this.setUserStatus(res.data)
-      console.log("登录成功") 
       // 返回我的页面
-      uni.navigateBack(1)
+      uni.navigateBack({
+        delta: 1
+      })
     }
   }
 }
@@ -97,8 +96,8 @@ export default {
     padding: 0 20rpx;
   }
 
-  input:hover {
-    border: 2px solid #000;
+  .inputing {
+    border: 2px solid #000!important;
     &::before {
       color: #3498db!important;
       font-weight: bold;

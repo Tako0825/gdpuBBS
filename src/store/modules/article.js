@@ -7,9 +7,10 @@ export default {
             article: null, // 当前文章详情
             author: null, // 当前文章作者
             commentList: new Array(), // 当前评论列表
-            articleList: new Array(), // 首页文章列表
-            pageNum: 1,
-            pageSize: 10
+            articleList: new Array(), // 当前首页文章列表
+            categoryId: null, // 当前首页分类id
+            pageNum: 1, // 当前显示页数
+            pageSize: 10 // 每页文章个数
         }
     },
     getters: {
@@ -27,11 +28,20 @@ export default {
         },
         getCommentList(state) {
             return state.commentList
-        }
+        },
+        getCategoryId(state) {
+            return state.categoryId
+        },
+        getPageNum(state) {
+            return state.pageNum
+        },
     },
     mutations: {
         setArticleList(state, payload) {
             state.articleList = payload
+        },
+        appendArticleList(state, payload) {
+            state.articleList = Array.prototype.concat(state.articleList, payload)
         },
         setArticleId(state, payload) {
             this.commit("article/setArticle", null)
@@ -46,17 +56,29 @@ export default {
         },
         setCommentList(state, payload) {
             state.commentList = payload
-        }
+        },
+        setCategoryId(state, payload) {
+            state.categoryId = payload
+        },
+        setPageNum(state, payload) {
+            state.pageNum = payload
+        },
     },
     actions: {
         // 请求 - 根据分类id获取文章列表 (默认传入分类id为-1, 即获取全部文章)
-        async fetchArticleList({ state }, payload = -1) {
+        async fetchArticleList({ state, commit }, payload = {
+            cid: -1,
+            pageNum: 1,
+            pageSize: 10
+        }) {
+            commit("setCategoryId", payload.cid)
+            const { cid, pageNum, pageSize } = payload
             const { data } = await http("/articles/wx/articleInfo", {
                 method: "GET",
                 data: {
-                    cid: payload,
-                    pageNum: state.pageNum,
-                    pageSize: state.pageSize
+                    cid,
+                    pageNum,
+                    pageSize
                 }
             })
             return data

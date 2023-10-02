@@ -44,9 +44,13 @@ export default {
         },
 
         // 获取状态 - 指定分类所有文章
-        async findArticleByCategory(id) {
+        async findArticleByCategory(cid) {
             this.setArticleList([])
-            const categoryList = await this.fetchArticleList(id)
+            const categoryList = await this.fetchArticleList({
+                cid,
+                pageNum: 1,
+                pageSize: 10
+            })
             this.setArticleList(categoryList)
         }
     }

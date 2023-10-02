@@ -20,7 +20,7 @@
       <view class="follower"><text class="data">{{ user.followers || "0" }}</text><text>粉丝</text></view>
     </view>
 
-    <!-- 登录提示 -->
+    <!-- 登录错误提示 -->
     <GdpuMessage 
       v-for="(item, index) in messageList" 
       :key="index"
@@ -36,11 +36,11 @@ export default {
   components: {
     GdpuMessage
   },
+  props: [
+    "user"
+  ],
   data() {
       return {
-          // | age | email | articleCount | followers | subscribes | gender |
-          // | id | jwtToken | name | password | picture |
-          user: this.$store.state.user,
           defaultAvatar,
           messageList: new Array()
       }
@@ -48,10 +48,6 @@ export default {
   methods: {
       // 跳转 - 登录
       pageToLogin() {
-        // 登录 - 成功提示
-        this.messageList.push({
-          content: "登录成功"
-        })
         uni.navigateTo({
             url: "./login"
         })
