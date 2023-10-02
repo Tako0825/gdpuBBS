@@ -69,6 +69,8 @@
     "@dcloudio/uni-stat": "2.0.2-3081220230817001",
     "@kangc/v-md-editor": "^1.7.11",
     "@vue/shared": "3.3.4",
+    "@wangeditor/editor": "^5.1.23",
+    "@wangeditor/editor-for-vue": "^1.0.2",
     "axios": "^1.5.0",
     "core-js": "^3.8.3",
     "flyio": "0.6.14",

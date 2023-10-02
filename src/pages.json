@@ -32,6 +32,18 @@
 			"style": {
 				"navigationBarTitleText": "登录"
 			}
+		},
+		{
+			"path": "pages/user/register",
+			"style": {
+				"navigationBarTitleText": "注册"
+			}
+		},
+		{
+			"path": "pages/user/editor",
+			"style": {
+				"navigationBarTitleText": "我要发贴"
+			}
 		}
 	],
 	"tabBar": {

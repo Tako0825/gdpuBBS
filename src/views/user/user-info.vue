@@ -55,7 +55,9 @@ export default {
 
       // 跳转 - 注册
       pageToRegister() {
-      // ...todo
+        uni.navigateTo({
+            url: "./register"
+        })
       },
   }
 }

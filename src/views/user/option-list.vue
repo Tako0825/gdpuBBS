@@ -1,13 +1,13 @@
 <template>
 <view class="cardList">
-    <view class="card slide-bottom" @click="pageToPersonal">
-        <img src="../../static/permissions.png" alt="登录">
-        <text>个人信息</text>
-        <img src="../../static/right.png" alt="右箭头">
-    </view>
     <view class="card  slide-bottom" @click="pageToPublish">
         <img src="../../static/broadcast.png" alt="我要发帖">
         <text>我要发帖</text>
+        <img src="../../static/right.png" alt="右箭头">
+    </view>
+    <view class="card slide-bottom" @click="pageToPersonal">
+        <img src="../../static/permissions.png" alt="个人信息">
+        <text>个人信息</text>
         <img src="../../static/right.png" alt="右箭头">
     </view>
     <view class="card  slide-bottom" @click="pageToMyStar">
@@ -20,30 +20,57 @@
         <text>我的点赞</text>
         <img src="../../static/right.png" alt="右箭头">
     </view>
+
+    <!-- 消息提示 -->
+    <GdpuMessage 
+      v-for="(item, index) in messageList" 
+      :key="index"
+      v-bind:content="item.content"
+    />
 </view>
 </template>
 
 <script>
+import GdpuMessage from "@/components/gdpu-message"
 export default {
+    components: {
+        GdpuMessage
+    },
+    data() {
+        return {
+            messageList: new Array()
+        }
+    },
     methods: {
-        // 跳转 - 个人信息
-        pageToPersonal() {
-        // ...todo
-        },
-
         // 跳转 - 我要发贴
         pageToPublish() {
-        // ...todo
+            uni.navigateTo({
+                 url: 'editor'
+            })
+        },
+
+        // 跳转 - 个人信息
+        pageToPersonal() {
+            // ...todo
+            this.messageList.push({
+                content: "敬请期待"
+            })
         },
 
         // 跳转 - 我的收藏
         pageToMyStar() {
-        // ...todo
+            // ...todo
+            this.messageList.push({
+                content: "敬请期待"
+            })
         },
 
         // 跳转 - 我的点赞
         pageToMyLike() {
-        // ...todo
+            // ...todo
+            this.messageList.push({
+                content: "敬请期待"
+            })
         }
     }
 }
