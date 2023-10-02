@@ -3,7 +3,7 @@
     <view class="container">
       <view class="gradient-text">Welcome to GDPU BBS!</view>
       <input :class="username?'inputing':''" name="username" type="text" v-model="username">
-      <input :class="password?'inputing':''" name="password" type="text" v-model="password">
+      <input :class="password?'inputing':''" name="password" type="password" v-model="password">
       <button class="login cu-btn" type="button" @click="login">登 录</button>
     </view>
 
@@ -40,29 +40,30 @@ export default {
     ]),
     // 登录
     async login() {
-      const { data: res } = await http("/users/login", {
-        method: 'POST',
-        data: {
-          name: this.username,
-          password: this.password
-        }
-      })
-      // 异常处理
-      if(res.status === 500) {
-        return this.messageList.push({
-          content: "用户名和密码不匹配"
+        const { data: res } = await http("/users/login", {
+          method: 'POST',
+          data: {
+            name: this.username,
+            password: this.password
+          }
         })
-      }
-      // 保存全局登录态
-      await wx.setStorage({
-          key: "user",
-          data: res.data
-      })
-      this.setUserStatus(res.data)
-      // 返回我的页面
-      uni.navigateBack({
-        delta: 1
-      })
+        console.log(res);
+        // 异常处理 & 输入数据有误
+        if(res.status === 500 || !res.success) {
+          return this.messageList.push({
+            content: "用户名和密码不匹配"
+          })
+        }
+        // 保存全局登录态
+        await wx.setStorage({
+            key: "user",
+            data: res.data
+        })
+        this.setUserStatus(res.data)
+        // 返回我的页面
+        uni.navigateBack({
+          delta: 1
+        })
     }
   }
 }
