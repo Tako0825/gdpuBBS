@@ -2,7 +2,7 @@
     <view>
         <!-- 文章详情 -->
         <view v-if="getArticle" class="article cu-card dynamic">
-            <view class="cu-item shadow">
+            <view class="article-core cu-item shadow">
                 <view class="cu-list menu-avatar">
                     <view class="cu-item">
                         <view class="avatar cu-avatar round lg">
@@ -17,7 +17,7 @@
                     </view>
                 </view>
                 <view class="text-content">
-                    {{ getArticle.content }}
+                    <towxml :nodes="content"/>
                 </view>
             </view>
         </view>
@@ -35,11 +35,12 @@
         </view>
 
         <!-- 加载组件 -->
-        <GdpuLoading v-if="!getArticle"/>
+        <GdpuLoading v-if="!content"/>
     </view>
 </template>
 
 <script>
+import towxml from '@/static/towxml/towxml'
 import formatDate from "@/utils/formatDate"
 import sleep from "@/utils/sleep"
 import { createNamespacedHelpers } from "vuex"
@@ -49,7 +50,12 @@ import GdpuLoading from "@/components/gdpu-loading"
 const { mapGetters, mapMutations, mapActions } = createNamespacedHelpers("article")
 export default {
     components: {
-        like, star, GdpuLoading
+        like, star, GdpuLoading, towxml
+    },
+    data() {
+        return {
+            content: ""
+        }
     },
     computed: {
         ...mapGetters([
@@ -59,6 +65,7 @@ export default {
     async mounted() {
         await sleep()
         await this.myArticleDetail()
+        this.content = this.towxml(this.getArticle.content, "markdown")
     },
     methods: {
         formatDate,
@@ -81,7 +88,12 @@ export default {
 <style scoped lang="less">
 // 文章详情
 .article {
-    width: 100%;
+    width: 750rpx;
+    padding: 30rpx;
+    .article-core {
+        max-width: 100%;
+        margin: 0;
+    }
     .avatar {
         overflow: hidden;
         img {
@@ -92,6 +104,12 @@ export default {
     .content {
         display: flex;
         column-gap: 20rpx;
+    }
+    .text-content {
+        width: 100%!important;
+        height: auto;
+        overflow: visible!important;
+        max-height: none!important;
     }
 }
 
@@ -105,7 +123,7 @@ export default {
     justify-content: center;
     align-items: center;
     row-gap: 40rpx;
-    width: 150rpx;
+    width: 100rpx;
     height: 100vh;
     background-color: transparent;
     .control {

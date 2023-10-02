@@ -28,6 +28,7 @@ export default {
       width: 750rpx;
       height: 100vh;
       overflow: hidden;
+      background-color: #f1f1f1;
       img {
         position: relative;
         width: 50rpx;

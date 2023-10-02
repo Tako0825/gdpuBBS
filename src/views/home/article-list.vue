@@ -41,8 +41,6 @@
         v-bind:content="'请先进行登录'"
     ></GdpuModal>
 
-    <!-- 加载组件 -->
-    <GdpuLoading v-if="!getArticleList.length"/>
 </view>
 </template>
 
@@ -52,12 +50,11 @@ import sleep from "@/utils/sleep"
 import like from "@/components/like.vue"
 import star from "@/components/star.vue"
 import GdpuModal from "@/components/gdpu-modal.vue"
-import GdpuLoading from "@/components/gdpu-loading.vue"
 import { createNamespacedHelpers } from "vuex"
 const { mapGetters, mapMutations, mapActions } = createNamespacedHelpers("article")
 export default {
     components: {
-        GdpuLoading, GdpuModal, like, star
+        GdpuModal, like, star
     },
     data() {
         return {

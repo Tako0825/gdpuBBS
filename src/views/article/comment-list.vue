@@ -45,7 +45,7 @@ export default {
     // 评论列表
     .commentList {
         .comment {
-            width: 570rpx;
+            width: 620rpx;
             margin-left: 30rpx;
             border-radius: 10rpx;
             .avatar {

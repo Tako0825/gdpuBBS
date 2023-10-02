@@ -1,4 +1,4 @@
-export default async (duration = 100) => {
+export default async (duration = 250) => {
     return new Promise(resolve => {
         let timer = setTimeout(() => {
             clearTimeout(timer)
