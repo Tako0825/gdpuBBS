@@ -10,14 +10,14 @@
         <text>个人信息</text>
         <img src="../../static/right.png" alt="右箭头">
     </view>
-    <view class="card  slide-bottom" @click="pageToMyStar">
-        <img src="../../static//star.png" alt="我的收藏">
-        <text>我的收藏</text>
-        <img src="../../static/right.png" alt="右箭头">
-    </view>
     <view class="card  slide-bottom" @click="pageToMyLike">
         <img src="../../static//like.png" alt="我的点赞">
         <text>我的点赞</text>
+        <img src="../../static/right.png" alt="右箭头">
+    </view>
+    <view class="card  slide-bottom" @click="pageToMyStar">
+        <img src="../../static//star.png" alt="我的收藏">
+        <text>我的收藏</text>
         <img src="../../static/right.png" alt="右箭头">
     </view>
 
@@ -51,25 +51,22 @@ export default {
 
         // 跳转 - 个人信息
         pageToPersonal() {
-            // ...todo
-            this.messageList.push({
-                content: "敬请期待"
+            uni.navigateTo({
+                 url: 'profile-form'
+            })
+        },
+        
+        // 跳转 - 我的点赞
+        pageToMyLike() {
+            uni.navigateTo({
+                 url: 'my-like'
             })
         },
 
         // 跳转 - 我的收藏
         pageToMyStar() {
-            // ...todo
-            this.messageList.push({
-                content: "敬请期待"
-            })
-        },
-
-        // 跳转 - 我的点赞
-        pageToMyLike() {
-            // ...todo
-            this.messageList.push({
-                content: "敬请期待"
+            uni.navigateTo({
+                 url: 'my-star'
             })
         }
     }

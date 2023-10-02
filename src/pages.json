@@ -44,6 +44,24 @@
 			"style": {
 				"navigationBarTitleText": "我要发贴"
 			}
+		},
+		{
+			"path": "pages/user/profile-form",
+			"style": {
+				"navigationBarTitleText": "修改资料"
+			}
+		},
+		{
+			"path": "pages/user/my-like",
+			"style": {
+				"navigationBarTitleText": "我的点赞"
+			}
+		},
+		{
+			"path": "pages/user/my-star",
+			"style": {
+				"navigationBarTitleText": "我的收藏"
+			}
 		}
 	],
 	"tabBar": {
